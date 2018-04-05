@@ -1,0 +1,16 @@
+{
+	"actors": [
+		{
+			"name": "Tom Cruise",
+			"dataset": "tom_cruise_pics"
+		},
+		{
+			"name": "Julia Roberts",
+			"dataset": "julia_roberts_pics"
+		}
+	],
+	"thresholds": {
+		"clf": 0.6,
+		"frames": 20
+	}
+}
