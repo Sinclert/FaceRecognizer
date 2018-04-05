@@ -9,7 +9,6 @@ import pickle
 project_paths = {
 	'dataset': ['resources', 'datasets'],
 	'model': ['models'],
-	'analysis_c': ['configs', 'analysis'],
 	'scraping_c': ['configs', 'scraping'],
 	'training_c': ['configs', 'training'],
 	'face_model': ['resources', 'face_models']
