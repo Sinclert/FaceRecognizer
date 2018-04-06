@@ -48,7 +48,7 @@ def build_datasets(dataset_config):
 	)
 
 	for data in datasets:
-		create_dataset(data['actor_name'], data['pics_number'])
+		create_dataset(data['actor_query'], data['pics_number'])
 
 
 
