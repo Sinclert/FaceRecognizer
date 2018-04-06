@@ -4,11 +4,14 @@
 from argparse import ArgumentParser as Parser
 from argparse import RawDescriptionHelpFormatter
 
+from dataset_build import create_dataset
+from utils import read_json
+
 
 # Default CLI modes
 modes = [
 	'analyse_video',
-	'build_dataset',
+	'build_datasets',
 	'train_model'
 ]
 
@@ -30,13 +33,22 @@ def analyse_video(video_path, model_name, clf_th, frames_th):
 
 def build_datasets(dataset_config):
 
-	"""
+	""" Builds datasets of pictures given a configuration file
 
 	Arguments:
 	----------
+		dataset_config:
+			type: string
+			info: name of the JSON with the dataset configuration
 	"""
 
-	# TODO
+	datasets = read_json(
+		file_name = dataset_config,
+		file_type = 'scraping_c'
+	)
+
+	for data in datasets:
+		create_dataset(data['actor_name'], data['pics_number'])
 
 
 

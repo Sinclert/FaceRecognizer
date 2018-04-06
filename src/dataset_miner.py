@@ -38,7 +38,7 @@ def build_url(domain, path, parameters = None):
 
 	url = 'https://' + domain + path
 
-	if parameters is None:
+	if parameters is not None:
 		url += '?'
 
 		for key, value in parameters.items():
@@ -102,44 +102,15 @@ def get_next_page(page, class_name):
 
 
 
-def get_images_src(page):
+def get_images(page):
 
-	""" Yields each image source link from the html page (Generator)
+	""" Yields each page image bytes as a PIL Image (Generator)
 
 	Arguments:
 	----------
 		page:
 			type: string (html format)
 			info: html of the page containing the images
-
-		class_name:
-			type: string
-			info: name of the pictures class (defined by search engine)
-
-	Yields:
-	----------
-		source:
-			type: string
-			info: source link of an image
-	"""
-
-	images = page.findAll('img')
-
-	for img in images:
-		print(img['src'])
-
-
-
-
-def get_image(url):
-
-	""" Requests the url image bytes and yields them as a PIL Image (Generator)
-
-	Arguments:
-	----------
-		url:
-			type: string
-			info: link to a specific image
 
 	Yields:
 	----------
@@ -148,10 +119,14 @@ def get_image(url):
 			info: image from the given url
 	"""
 
-	image_bytes = requests.get(url).content
+	images = page.findAll('img')
 
-	image = base64.b64encode(image_bytes)
-	image = base64.b64decode(image)
-	image = Image.open(io.BytesIO(image))
+	for img in images:
 
-	return image
+		image_bytes = requests.get(img['src']).content
+
+		image = base64.b64encode(image_bytes)
+		image = base64.b64decode(image)
+		image = Image.open(io.BytesIO(image))
+
+		yield image
