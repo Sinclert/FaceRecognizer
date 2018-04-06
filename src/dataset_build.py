@@ -47,7 +47,7 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 	# Unwrapping search engine properties
 	domain = search_engine['domain']
 	path = search_engine['path']
-	params = search_engine['path']
+	params = search_engine['params']
 	params['q'] = query
 
 	stored = 0
@@ -65,7 +65,7 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 			face = check_face(img)
 
 			# If no face is detected: continue
-			if not face: continue
+			if face is None: continue
 
 			# Normalizes and saves the image
 			face = normalize_face(face)

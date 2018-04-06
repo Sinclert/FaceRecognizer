@@ -80,7 +80,7 @@ def detect_face(image, classifier, **parameters):
 	if len(faces) > 0:
 		(x, y, w, h) = faces[0]
 		results = {
-			'Found': True,
+			'found': True,
 			'X_coord': x,
 			'Y_coord': y,
 			'width': w,
@@ -88,7 +88,7 @@ def detect_face(image, classifier, **parameters):
 		}
 
 	else:
-		results = {'Found': False}
+		results = {'found': False}
 
 	return results
 
