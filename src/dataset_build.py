@@ -1,6 +1,8 @@
 # Created by Sinclert Pérez & Silvia Barbero
 
 
+import os
+
 from dataset_miner import build_url
 from dataset_miner import get_page
 from dataset_miner import get_next_page
@@ -8,6 +10,8 @@ from dataset_miner import get_images
 
 from image_process import check_face
 from image_process import normalize_face
+
+from utils import compute_path
 
 
 SEARCH_ENGINE = {
@@ -17,7 +21,6 @@ SEARCH_ENGINE = {
 		'tbm': 'isch'
 	}
 }
-
 
 
 
@@ -61,22 +64,48 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 		path = get_next_page(page, 'fl')
 		params = None
 
-		for img in get_images(page):
-			face = check_face(img)
+		# Each image is saved if a face is detected
+		for image in get_images(page):
+			face = check_face(image)
 
 			# If no face is detected: continue
 			if face is None: continue
 
-			# Normalizes and saves the image
+			# Normalizes and stores the image
 			face = normalize_face(face)
-			save_image(face)
+			save_image(
+				image = face,
+				output_folder = query.replace(' ', '_'),
+				output_name = str(stored)
+			)
+
 			stored += 1
+			if stored == pics_num: break
 
 
 
 
-def save_image(image):
+def save_image(image, output_folder, output_name):
 
-	# TODO
+	""" Stores the given image in the output path with the output name
 
-	pass
+	Arguments:
+	----------
+		image:
+			type: PIL image
+			info: image to store
+
+		output_path:
+			type: string
+			info: folder to store the image
+
+		output_name:
+			type: string
+			info: name of the image file
+	"""
+
+	folder_path = compute_path(output_folder, 'dataset')
+	os.makedirs(folder_path, exist_ok = True)
+
+	file_path = os.path.join(folder_path, output_name + '.png')
+	image.save(file_path)

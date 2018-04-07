@@ -1,10 +1,10 @@
 [
 	{
 		"actor_query": "Tom Cruise face",
-		"pics_number": 300
+		"pics_number": 100
 	},
 	{
 		"actor_query": "Julia Roberts face",
-		"pics_number": 300
+		"pics_number": 100
 	}
 ]

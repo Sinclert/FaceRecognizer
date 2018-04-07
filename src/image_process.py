@@ -2,6 +2,7 @@
 
 
 from cv2 import CascadeClassifier
+from PIL import Image
 
 from image_trans import greyscale_array
 from image_trans import detect_face
@@ -32,7 +33,7 @@ def check_face(image, face_detector = FACE_DETECTOR):
 	Returns:
 	----------
 		image:
-			type: PIL image
+			type: numpy array
 			info: cut image in greyscale if there is a face, None otherwise
 	"""
 
@@ -54,7 +55,7 @@ def normalize_face(image):
 	Arguments:
 	----------
 		image:
-			type: PIL image
+			type: numpy array
 			info: greyscale face image
 
 	Returns:
@@ -66,5 +67,6 @@ def normalize_face(image):
 
 	image = normalize_colors(image)
 	image = resize(image)
+	image = Image.fromarray(image)
 
 	return image
