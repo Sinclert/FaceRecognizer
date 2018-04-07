@@ -4,8 +4,12 @@
 from argparse import ArgumentParser as Parser
 from argparse import RawDescriptionHelpFormatter
 
+from clf_train import prepare_feats
+from clf_train import train
+
 from dataset_build import create_dataset
 from utils import read_json
+from utils import save_object
 
 
 # Default CLI modes
@@ -55,13 +59,42 @@ def build_datasets(dataset_config):
 
 def train_model(algorithm, training_config, output):
 
-	"""
+	""" Trains a OpenCV classifier and stores it in the models folder
 
 	Arguments:
 	----------
+		algorithm:
+			type: string
+			info: name of the classifier {Eigen, Fisher, LBPH}
+
+		training_config:
+			type: string
+			info: name of the JSON with the training configuration
+
+		output:
+			type: string
+			info: name of the output model
 	"""
 
-	# TODO
+	datasets = read_json(
+		file_name = training_config,
+		file_type = 'training_c'
+	)
+
+	feats, labels = [], []
+
+	for dataset_folder, label in datasets.items():
+		new_feats = prepare_feats(dataset_folder)
+		feats += new_feats
+		labels += [label] * len(new_feats)
+
+	model = train(
+		algorithm = algorithm,
+		feats = feats,
+		labels = labels
+	)
+
+	save_object(model, output, 'model')
 
 
 
