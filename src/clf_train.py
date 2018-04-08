@@ -2,8 +2,10 @@
 
 
 import cv2
+import numpy
 
 from utils import get_file_paths
+from utils import load_object
 
 
 ALGORITHMS = {
@@ -15,60 +17,132 @@ ALGORITHMS = {
 
 
 
-def prepare_feats(dataset_folder):
-
-	""" Builds a list of images arrays in order to be used as features
-
-	Arguments:
-	----------
-		dataset_folder:
-			type: string
-			info: name of the folder with the images
-
-	Returns:
-	----------
-		feats:
-			type: list
-			info: contains the image numpy arrays as features
-	"""
-
-	images_paths = get_file_paths(
-		folder_name = dataset_folder,
-		file_type = 'dataset'
-	)
-
-	feats = [cv2.imread(path, 0) for path in images_paths]
-	return feats
+class FaceClassifier(object):
 
 
+	""" Represents a face classifier
 
-
-def train(algorithm, feats, labels):
-
-	"""
-
-	Arguments:
-	----------
-		algorithm:
-			type:
-			info:
-
-		feats:
-			type:
-			info:
-
-		labels:
-			type:
-			info:
-
-	Returns:
+	Attributes:
 	----------
 		model:
-			type:
-			info:
+			type: OpenCV Recognizer
+			info: trained classifier model
+
+		labels_dict:
+			type: dict
+			info: contains the relation integer <-> actor name
 	"""
 
-	model = ALGORITHMS[algorithm]
-	model.train(feats, labels)
 
-	return model
+
+
+	def __init__(self, file_name = None):
+
+		""" Loads a trained model or initiates a new one
+
+		Arguments:
+		----------
+			file_name:
+				type: string (optional)
+				info: name of the saved model file
+		"""
+
+		if file_name is not None:
+			self.__dict__ = load_object(file_name, 'model')
+
+		else:
+			self.model = None
+			self.labels_dict = {}
+
+
+
+
+	def __prepare_feats(self, datasets_info):
+
+		""" Builds the feature and label vectors from the specified datasets
+
+		Arguments:
+		----------
+			datasets_info:
+				type: list
+				info: list of dictionaries containing:
+					- label (string)
+					- folder (string)
+
+		Returns:
+		----------
+			feats:
+				type: numpy.array
+				info: contains all the image arrays
+
+			labels:
+				type: numpy.array
+				info: contains all the integer-encoded labels
+		"""
+
+		feats, labels = [], []
+
+		for i, dataset in enumerate(datasets_info):
+
+			images_paths = get_file_paths(
+				folder_name = dataset['folder'],
+				file_type = 'dataset'
+			)
+
+			feats += [cv2.imread(path, 0) for path in images_paths]
+			labels += [i] * len(images_paths)
+
+			# Updates the corresponding ints <-> labels dict
+			self.labels_dict[i] = dataset['label']
+
+
+		return feats, numpy.array(labels)
+
+
+
+
+	def predict(self, frame):
+
+		"""
+
+		Arguments:
+		----------
+			frame:
+				type:
+				info:
+
+		Returns:
+		----------
+			label:
+				type:
+				info:
+		"""
+
+		# TODO
+
+
+
+
+	def train(self, algorithm, datasets_info):
+
+		""" Trains the specified OpenCV Recognizer algorithm
+
+		Arguments:
+		----------
+			algorithm:
+				type: string
+				info: name of the algorithm {Eigen, Fisher, LBPH}
+
+			datasets_info:
+				type: list
+				info: dictionaries containing datasets labels and folder
+		"""
+
+		feats, labels = self.__prepare_feats(datasets_info)
+
+		try:
+			self.model = ALGORITHMS[algorithm]
+			self.model.train(feats, labels)
+
+		except KeyError:
+			exit('Invalid algorithm name')

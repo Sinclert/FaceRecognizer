@@ -4,8 +4,7 @@
 from argparse import ArgumentParser as Parser
 from argparse import RawDescriptionHelpFormatter
 
-from clf_train import prepare_feats
-from clf_train import train
+from clf_train import FaceClassifier
 
 from dataset_build import create_dataset
 from utils import read_json
@@ -81,20 +80,13 @@ def train_model(algorithm, training_config, output):
 		file_type = 'training_c'
 	)
 
-	feats, labels = [], []
-
-	for dataset in datasets:
-		new_feats = prepare_feats(dataset['folder'])
-		feats += new_feats
-		labels += [dataset['label']] * len(new_feats)
-
-	model = train(
+	classifier = FaceClassifier()
+	classifier.train(
 		algorithm = algorithm,
-		feats = feats,
-		labels = labels
+		datasets_info = datasets
 	)
 
-	save_object(model, output, 'model')
+	#classifier.model.save(output)
 
 
 
