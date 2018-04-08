@@ -78,6 +78,37 @@ def compute_path(file_name, file_type):
 
 
 
+def get_file_paths(folder_name, file_type):
+
+	""" Obtains the list of file paths for a given folder
+
+	Arguments:
+	----------
+		folder_name:
+			type: string
+			info: name of the folder whose file will be returned
+
+		file_type:
+			type: string
+			info: type of files in order to know the relative path
+
+	Returns:
+	----------
+		file_paths:
+			type: list
+			info: contains the path to each file in a given folder
+	"""
+
+	folder_path = compute_path(folder_name, file_type)
+
+	file_names = os.listdir(path = folder_path)
+	file_paths = [os.path.join(folder_path, file) for file in file_names]
+
+	return file_paths
+
+
+
+
 def load_object(file_name, file_type):
 
 	""" Loads an object from the specified file

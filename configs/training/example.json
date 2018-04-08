@@ -1,10 +1,10 @@
 [
 	{
-		"dataset_label": "Tom Cruise",
-		"dataset_name": "tom_cruise_pics"
+		"label": "Tom Cruise",
+		"folder": "tom_cruise_face"
 	},
 	{
-		"dataset_label": "Julia Robers",
-		"dataset_name": "julia_roberts_pics"
+		"label": "Julia Robers",
+		"folder": "julia_roberts_face"
 	}
 ]

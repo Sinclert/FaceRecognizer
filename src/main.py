@@ -83,10 +83,10 @@ def train_model(algorithm, training_config, output):
 
 	feats, labels = [], []
 
-	for dataset_folder, label in datasets.items():
-		new_feats = prepare_feats(dataset_folder)
+	for dataset in datasets:
+		new_feats = prepare_feats(dataset['folder'])
 		feats += new_feats
-		labels += [label] * len(new_feats)
+		labels += [dataset['label']] * len(new_feats)
 
 	model = train(
 		algorithm = algorithm,
