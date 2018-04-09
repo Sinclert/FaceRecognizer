@@ -10,7 +10,11 @@ from dataset_build import create_dataset
 
 from utils import read_json
 from utils import write_json
+from utils import load_clf
 from utils import save_clf
+
+from video_process import identify_actors
+from video_process import save_video
 
 
 
@@ -24,15 +28,50 @@ modes = [
 
 
 
-def analyse_video(video_path, model_name, clf_th, frames_th):
+def analyse_video(video_path, model_name, clf_th, frames_th, output):
 
-	"""
+	""" Identifies actors in a video and generates one with their names
 
 	Arguments:
 	----------
+		video_path:
+			type: string
+			info: path where the video is located
+
+		model_name:
+			type: string
+			info: name of the trained model
+
+		clf_th:
+			type: float
+			info: confidence threshold to identify an actor
+
+		frames_th:
+			type: int
+			info: coherence of frames threshold to identify an actor
+
+		output:
+			type: string
+			info: name of the generated video
 	"""
 
-	# TODO
+	clf_props = read_json(
+		file_name = model_name + '.json',
+		file_type = 'model'
+	)
+
+	# Creating and loading the trained classifier
+	clf = FaceClassifier(clf_props['algorithm'])
+	clf.properties = clf_props
+	clf.model = load_clf(
+		clf = clf,
+		file_name = model_name + '.xml',
+		file_type = 'model'
+	)
+
+	# Generating a similar video with the names on it
+	video = identify_actors(video_path, clf, clf_th)
+	save_video(video, output)
 
 
 
@@ -88,7 +127,7 @@ def train_model(algorithm, training_config, output):
 
 	# Saving FaceClassifier int <-> label dict as JSON
 	write_json(
-		dictionary = classifier.labels_dict,
+		dictionary = classifier.properties,
 		file_name = output + '.json',
 		file_type = 'model'
 	)
@@ -138,9 +177,10 @@ if __name__ == '__main__':
 		parser.add_argument('-m', required = True)
 		parser.add_argument('-c', required = True, type = float)
 		parser.add_argument('-f', required = True, type = int)
+		parser.add_argument('-o', required = True)
 
 		args = parser.parse_args(func_args)
-		analyse_video(args.v, args.m, args.c, args.f)
+		analyse_video(args.v, args.m, args.c, args.f, args.o)
 
 
 	elif arg.mode == 'build_datasets':

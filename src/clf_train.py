@@ -48,7 +48,10 @@ class FaceClassifier(object):
 
 		try:
 			self.model = ALGORITHMS[algorithm]
-			self.labels_dict = {}
+			self.properties = {
+				'algorithm': algorithm,
+				'labels': {}
+			}
 
 		except KeyError:
 			exit('Invalid algorithm name')
@@ -92,7 +95,7 @@ class FaceClassifier(object):
 			labels += [i] * len(images_paths)
 
 			# Updates the corresponding ints <-> labels dict
-			self.labels_dict[i] = dataset['label']
+			self.properties['labels'][i] = dataset['label']
 
 
 		return feats, numpy.array(labels)
