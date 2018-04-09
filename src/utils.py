@@ -3,7 +3,6 @@
 
 import json
 import os
-import pickle
 
 
 project_paths = {
@@ -109,15 +108,19 @@ def get_file_paths(folder_name, file_type):
 
 
 
-def load_object(file_name, file_type):
+def load_clf(clf, file_name, file_type):
 
-	""" Loads an object from the specified file
+	""" Loads a classifier object with the specified name
 
 	Arguments:
-		----------
+	----------
+		clf:
+			type: FaceRecognizer object
+			info: empty object to use the 'load' function
+
 		file_name:
 			type: string
-			info: saved object file name
+			info: saved classifier object name
 
 		file_type:
 			type: string
@@ -125,19 +128,15 @@ def load_object(file_name, file_type):
 
 	Returns:
 	----------
-		obj:
-			type: dict
-			info: dictionary containing the object information
+		clf:
+			type: OpenCV Recognizer
+			info: trained classifier model object
 	"""
 
 	file_path = compute_path(file_name, file_type)
 
 	try:
-		file = open(file_path, 'rb')
-		obj = pickle.load(file)
-		file.close()
-
-		return obj
+		return clf.model.load(file_path)
 
 	except IOError:
 		exit('The object could not be loaded from ' + file_path)
@@ -145,19 +144,19 @@ def load_object(file_name, file_type):
 
 
 
-def save_object(obj, file_name, file_type):
+def save_clf(clf, file_name, file_type):
 
-	""" Saves an object in the specified path
+	""" Saves a classifier object in the specified path
 
 	Arguments:
 	----------
-		obj:
-			type: object
-			info: instance of a class that will be serialized
+		clf:
+			type: OpenCV Recognizer
+			info: trained classifier model object
 
 		file_name:
 			type: string
-			info: saved object file name
+			info: saved classifier object name
 
 		file_type:
 			type: string
@@ -170,10 +169,7 @@ def save_object(obj, file_name, file_type):
 	os.makedirs(file_dir, exist_ok = True)
 
 	try:
-		file = open(file_path, 'wb')
-		pickle.dump(obj.__dict__, file)
-		file.close()
-
+		clf.save(file_path)
 	except IOError:
 		exit('The object could not be saved in ' + file_path)
 
@@ -209,6 +205,41 @@ def read_json(file_name, file_type):
 		file.close()
 
 		return json_dict
+
+	except IOError:
+		exit('The file ' + file_name + ' cannot be opened')
+
+
+
+
+def write_json(dictionary, file_name, file_type):
+
+	""" Writes a dictionary object as a JSON file
+
+	Arguments:
+	----------
+		dictionary:
+			type: dict
+			info: object to store as a JSON file
+
+		file_name:
+			type: string
+			info: saved JSON name
+
+		file_type:
+			type: string
+			info: used to determine the proper path
+	"""
+
+	file_path = compute_path(file_name, file_type)
+
+	file_dir = file_path.replace(file_name, '')
+	os.makedirs(file_dir, exist_ok = True)
+
+	try:
+		file = open(file_path, 'w', encoding = 'utf-8')
+		json.dump(dictionary, file, sort_keys = True, indent = 4)
+		file.close()
 
 	except IOError:
 		exit('The file ' + file_name + ' cannot be opened')

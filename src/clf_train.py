@@ -5,7 +5,6 @@ import cv2
 import numpy
 
 from utils import get_file_paths
-from utils import load_object
 
 
 ALGORITHMS = {
@@ -36,23 +35,23 @@ class FaceClassifier(object):
 
 
 
-	def __init__(self, file_name = None):
+	def __init__(self, algorithm):
 
-		""" Loads a trained model or initiates a new one
+		""" Initiates a classifier object with a model type
 
 		Arguments:
 		----------
-			file_name:
-				type: string (optional)
-				info: name of the saved model file
+			algorithm:
+				type: string
+				info: name of the algorithm {Eigen, Fisher, LBPH}
 		"""
 
-		if file_name is not None:
-			self.__dict__ = load_object(file_name, 'model')
-
-		else:
-			self.model = None
+		try:
+			self.model = ALGORITHMS[algorithm]
 			self.labels_dict = {}
+
+		except KeyError:
+			exit('Invalid algorithm name')
 
 
 
@@ -123,16 +122,12 @@ class FaceClassifier(object):
 
 
 
-	def train(self, algorithm, datasets_info):
+	def train(self, datasets_info):
 
 		""" Trains the specified OpenCV Recognizer algorithm
 
 		Arguments:
 		----------
-			algorithm:
-				type: string
-				info: name of the algorithm {Eigen, Fisher, LBPH}
-
 			datasets_info:
 				type: list
 				info: dictionaries containing datasets labels and folder
@@ -140,9 +135,4 @@ class FaceClassifier(object):
 
 		feats, labels = self.__prepare_feats(datasets_info)
 
-		try:
-			self.model = ALGORITHMS[algorithm]
-			self.model.train(feats, labels)
-
-		except KeyError:
-			exit('Invalid algorithm name')
+		self.model.train(feats, labels)

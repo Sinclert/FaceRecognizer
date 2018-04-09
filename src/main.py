@@ -7,8 +7,11 @@ from argparse import RawDescriptionHelpFormatter
 from clf_train import FaceClassifier
 
 from dataset_build import create_dataset
+
 from utils import read_json
-from utils import save_object
+from utils import write_json
+from utils import save_clf
+
 
 
 # Default CLI modes
@@ -80,13 +83,22 @@ def train_model(algorithm, training_config, output):
 		file_type = 'training_c'
 	)
 
-	classifier = FaceClassifier()
-	classifier.train(
-		algorithm = algorithm,
-		datasets_info = datasets
+	classifier = FaceClassifier(algorithm)
+	classifier.train(datasets)
+
+	# Saving FaceClassifier int <-> label dict as JSON
+	write_json(
+		dictionary = classifier.labels_dict,
+		file_name = output + '.json',
+		file_type = 'model'
 	)
 
-	#classifier.model.save(output)
+	# Saving FaceClassifier trained model as XML (pickle not working)
+	save_clf(
+		clf = classifier.model,
+		file_name = output + '.xml',
+		file_type = 'model'
+	)
 
 
 
