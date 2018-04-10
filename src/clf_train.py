@@ -131,7 +131,7 @@ class FaceClassifier(object):
 		else:
 			label = 'Unknown'
 
-		return label, conf
+		return label
 
 
 
