@@ -4,7 +4,7 @@
 import cv2
 
 from image_process import check_face
-from image_process import draw_rectangle
+from image_process import draw_rect
 from image_process import normalize_face
 
 

@@ -59,7 +59,7 @@ def check_face(image, face_detector = FACE_DETECTOR):
 
 
 
-def draw_rectangle(image, coordinates):
+def draw_rect(image, coordinates):
 
 	""" Draws a rectangle in a given image
 
