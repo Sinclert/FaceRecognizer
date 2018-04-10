@@ -10,8 +10,8 @@ from dataset_build import create_dataset
 
 from utils import read_json
 from utils import write_json
-from utils import load_clf
-from utils import save_clf
+from utils import read_clf
+from utils import write_clf
 
 from video_process import identify_actors
 from video_process import save_video
@@ -63,7 +63,7 @@ def analyse_video(video_path, model_name, clf_th, frames_th, output):
 	# Creating and loading the trained classifier
 	clf = FaceClassifier(clf_props['algorithm'])
 	clf.properties = clf_props
-	clf.model = load_clf(
+	clf.model = read_clf(
 		clf = clf,
 		file_name = model_name + '.xml',
 		file_type = 'model'
@@ -133,7 +133,7 @@ def train_model(algorithm, training_config, output):
 	)
 
 	# Saving FaceClassifier trained model as XML (pickle not working)
-	save_clf(
+	write_clf(
 		clf = classifier.model,
 		file_name = output + '.xml',
 		file_type = 'model'

@@ -108,15 +108,15 @@ def get_file_paths(folder_name, file_type):
 
 
 
-def load_clf(clf, file_name, file_type):
+def read_clf(clf, file_name, file_type):
 
-	""" Loads a classifier object with the specified name
+	""" Reads a classifier object with the specified name
 
 	Arguments:
 	----------
 		clf:
 			type: FaceRecognizer object
-			info: empty object to use the 'load' function
+			info: empty object to use the 'read' function
 
 		file_name:
 			type: string
@@ -136,7 +136,8 @@ def load_clf(clf, file_name, file_type):
 	file_path = compute_path(file_name, file_type)
 
 	try:
-		return clf.model.load(file_path)
+		clf.model.read(file_path)
+		return clf.model
 
 	except IOError:
 		exit('The object could not be loaded from ' + file_path)
@@ -144,9 +145,9 @@ def load_clf(clf, file_name, file_type):
 
 
 
-def save_clf(clf, file_name, file_type):
+def write_clf(clf, file_name, file_type):
 
-	""" Saves a classifier object in the specified path
+	""" Writes a classifier object in the specified path
 
 	Arguments:
 	----------
@@ -169,7 +170,8 @@ def save_clf(clf, file_name, file_type):
 	os.makedirs(file_dir, exist_ok = True)
 
 	try:
-		clf.save(file_path)
+		clf.write(file_path)
+
 	except IOError:
 		exit('The object could not be saved in ' + file_path)
 
