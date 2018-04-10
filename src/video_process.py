@@ -40,7 +40,7 @@ def identify_actors(video_path, clf, clf_th):
 		if face is not None:
 			face = normalize_face(face)
 			label = clf.predict(face, clf_th)
-			frame = draw_rectangle(frame, coords)
+			frame = draw_rect(frame, coords)
 			print(label)
 
 		cv2.imshow('img', frame)
