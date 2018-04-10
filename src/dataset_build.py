@@ -3,6 +3,8 @@
 
 import os
 
+from PIL import Image
+
 from dataset_miner import build_url
 from dataset_miner import get_page
 from dataset_miner import get_next_page
@@ -72,7 +74,7 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 			if face is None: continue
 
 			# Normalizes and stores the image
-			face = normalize_face(face)
+			face = Image.fromarray(normalize_face(face))
 			save_image(
 				image = face,
 				output_folder = query.replace(' ', '_'),

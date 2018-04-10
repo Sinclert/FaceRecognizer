@@ -2,7 +2,6 @@
 
 
 from cv2 import CascadeClassifier
-from PIL import Image
 
 from image_trans import greyscale_array
 from image_trans import detect_face
@@ -61,12 +60,11 @@ def normalize_face(image):
 	Returns:
 	----------
 		image:
-			type: PIL image
-			info: normalized greyscale and size image
+			type: numpy array
+			info: normalized greyscale and sized image
 	"""
 
 	image = normalize_colors(image)
 	image = resize(image)
-	image = Image.fromarray(image)
 
 	return image

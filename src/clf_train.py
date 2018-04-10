@@ -110,17 +110,24 @@ class FaceClassifier(object):
 		Arguments:
 		----------
 			frame:
-				type:
-				info:
+				type: numpy.array
+				info: normalized greyscale and sized image
 
 		Returns:
 		----------
 			label:
-				type:
-				info:
+				type: string
+				info: name of the actor
+
+			conf:
+				type: float
+				info: confidence percentage
 		"""
 
-		# TODO
+		label, conf = self.model.predict(frame)
+		label = self.properties['labels'][str(label)]
+
+		return label, conf
 
 
 

@@ -29,22 +29,23 @@ def identify_actors(video_path, clf, clf_th):
 	"""
 
 	video = cv2.VideoCapture(video_path)
+	notFinished, frame = video.read()
 
-	while video.isOpened():
+	while notFinished:
 
-		_, frame = video.read()
 		face = check_face(frame)
 
 		# If no face is detected: continue
 		if face is None: continue
 
-		# Normalizes the image
+		# Normalizes and predicts the face label
 		face = normalize_face(face)
+		label, conf = clf.predict(face)
+		print(label)
 
-		clf.predict(face)
+		notFinished, frame = video.read()
 
 	video.release()
-	pass
 
 
 
