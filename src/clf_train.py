@@ -103,9 +103,9 @@ class FaceClassifier(object):
 
 
 
-	def predict(self, frame):
+	def predict(self, image, clf_th):
 
-		"""
+		""" Predicts a label (name) for a given face image
 
 		Arguments:
 		----------
@@ -113,19 +113,23 @@ class FaceClassifier(object):
 				type: numpy.array
 				info: normalized greyscale and sized image
 
+			clf_th:
+				type: float
+				info: confidence percentage threshold
+
 		Returns:
 		----------
 			label:
 				type: string
 				info: name of the actor
-
-			conf:
-				type: float
-				info: confidence percentage
 		"""
 
-		label, conf = self.model.predict(frame)
-		label = self.properties['labels'][str(label)]
+		label, conf = self.model.predict(image)
+
+		if conf >= clf_th:
+			label = self.properties['labels'][str(label)]
+		else:
+			label = 'Unknown'
 
 		return label, conf
 
