@@ -68,7 +68,7 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 
 		# Each image is saved if a face is detected
 		for image in get_images(page):
-			face = check_face(image)
+			face, _ = check_face(image)
 
 			# If no face is detected: continue
 			if face is None: continue

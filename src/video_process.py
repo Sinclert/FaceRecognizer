@@ -4,6 +4,7 @@
 import cv2
 
 from image_process import check_face
+from image_process import draw_rectangle
 from image_process import normalize_face
 
 
@@ -33,15 +34,19 @@ def identify_actors(video_path, clf, clf_th):
 
 	while notFinished:
 
-		face = check_face(frame)
+		face, coords = check_face(frame)
 
-		# If no face is detected: continue
-		if face is None: continue
+		# If there is a face: predicts the face label
+		if face is not None:
+			face = normalize_face(face)
+			label = clf.predict(face, clf_th)
+			frame = draw_rectangle(frame, coords)
+			print(label)
 
-		# Normalizes and predicts the face label
-		face = normalize_face(face)
-		label, conf = clf.predict(face)
-		print(label)
+		cv2.imshow('img', frame)
+		k = cv2.waitKey(30) & 0xff
+		if k == 27:
+			break
 
 		notFinished, frame = video.read()
 
