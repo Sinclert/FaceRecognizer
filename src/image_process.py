@@ -58,7 +58,6 @@ def check_face(image, face_detector = FACE_DETECTOR):
 
 
 
-
 def draw_rect(image, coordinates):
 
 	""" Draws a rectangle in a given image
@@ -93,6 +92,50 @@ def draw_rect(image, coordinates):
 		img = image,
 		pt1 = (x, y),
 		pt2 = (x+w, y+h),
+		color = (255, 0, 0),
+		thickness = 2
+	)
+
+	return image
+
+
+
+
+def draw_text(image, text, coordinates):
+
+	""" Writes some text in the given image
+
+	Arguments:
+	----------
+		image:
+			type: numpy array
+			info: RGB colored image
+
+		text:
+			type: string
+			info: text to write in the image
+
+		coordinates:
+			type: dict
+			info: contains the following keys:
+				- X_coord:  int
+				- Y_coord:  int
+				- width:    int
+				- height:   int
+
+	Returns:
+	----------
+		image:
+			type:
+			info:
+	"""
+
+	cv2.putText(
+		img = image,
+		text = text,
+		org = (coordinates['X_coord'], coordinates['Y_coord']),
+		fontFace = cv2.FONT_HERSHEY_PLAIN,
+		fontScale = 3,
 		color = (255, 0, 0),
 		thickness = 2
 	)
