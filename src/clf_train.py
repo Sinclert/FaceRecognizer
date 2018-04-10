@@ -131,6 +131,7 @@ class FaceClassifier(object):
 		else:
 			label = 'Unknown'
 
+		print(label, round(conf, 4))
 		return label
 
 

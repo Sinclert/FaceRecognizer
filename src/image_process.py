@@ -46,7 +46,7 @@ def check_face(image, face_detector = FACE_DETECTOR):
 	"""
 
 	image = greyscale_array(image, 'BGR') # TODO: CHECK
-	results = detect_face(image, face_detector)
+	results = detect_face(image, face_detector, scaleFactor = 1.3, minNeighbors = 4)
 
 	if results['found']:
 		face = cut_face(image, results)
