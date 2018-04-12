@@ -11,72 +11,91 @@ from image_process import normalize_face
 
 
 
-def identify_actors(video_path, clf, clf_th):
+def identify_actors(video_path, clf, clf_th, output_name):
 
-	"""
+	""" Identifies the actors using a classifier and generates an output video
 
 	Arguments:
 	----------
 		video_path:
-			type:
-			info:
+			type: string
+			info: path to where the video is stored
 
 		clf:
-			type:
-			info:
+			type: FaceRecognizer object
+			info: trained classifier to identify faces
 
 		clf_th:
-			type:
-			info:
+			type: int / float
+			info: threshold to identify a face as 'Unknown'
+
+		output_name:
+			type: string
+			info: name of the generated video file
 	"""
 
 	video = cv2.VideoCapture(video_path)
+
+	# The new generated video is prepared to be saved
+	frame_w = int(video.get(3))
+	frame_h = int(video.get(4))
+
+	output = cv2.VideoWriter(
+		filename = output_name + '.avi',
+		fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'),
+		fps = 20,
+		frameSize = (frame_w, frame_h)
+	)
+
+
 	notFinished, frame = video.read()
-
-	# Default resolutions of the frame are obtained.The default resolutions are system dependent.
-	# We convert the resolutions from float to integer.
-	frame_width = int(video.get(3))
-	frame_height = int(video.get(4))
-
-	# Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-	out = cv2.VideoWriter('outpy.avi',
-	                      cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10,
-	                      (frame_width, frame_height))
-
 	while notFinished:
 
-		face, coords = check_face(frame)
+		# Modify the frame if a face is detected
+		frame = modify_frame(frame, clf, clf_th)
 
-		# If there is a face: predicts the face label
-		if face is not None:
-			face = normalize_face(face)
-			label = clf.predict(face, clf_th)
-			frame = draw_rect(frame, coords)
-			frame = draw_text(frame, label, coords)
-
-		# Write the frame into the file 'output.avi'
-		out.write(frame)
+		# Write the frame into the new video file
+		output.write(frame)
 		notFinished, frame = video.read()
 
+
 	video.release()
-	out.release()
+	output.release()
 
 
 
 
-def save_video(video, output):
+def modify_frame(frame, clf, clf_th):
 
-	"""
+	""" Plot a rectangle and a label if a face is identified in the frame
 
 	Arguments:
 	----------
-		video:
-			type:
-			info:
+		frame:
+			type: numpy.array
+			info: array of frame pixels
 
-		output:
-			type:
-			info:
+		clf:
+			type: FaceRecognizer object
+			info: trained classifier to identify faces
+
+		clf_th:
+			type: int / float
+			info: threshold to identify a face as 'Unknown'
+
+	Returns:
+	----------
+		frame:
+			type: numpy.array
+			info: array of frame pixels (may be modified)
 	"""
 
-	pass
+	face, coords = check_face(frame)
+
+	if face is not None:
+		face = normalize_face(face)
+		label = clf.predict(face, clf_th)
+		frame = draw_rect(frame, coords)
+		frame = draw_text(frame, label, coords)
+
+	return frame

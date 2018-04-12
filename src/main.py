@@ -14,8 +14,6 @@ from utils import read_clf
 from utils import write_clf
 
 from video_process import identify_actors
-from video_process import save_video
-
 
 
 # Default CLI modes
@@ -70,8 +68,7 @@ def analyse_video(video_path, model_name, clf_th, frames_th, output):
 	)
 
 	# Generating a similar video with the names on it
-	video = identify_actors(video_path, clf, clf_th)
-	save_video(video, output)
+	identify_actors(video_path, clf, clf_th, output)
 
 
 
