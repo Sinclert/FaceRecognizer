@@ -15,7 +15,7 @@ FACE_DETECTOR = cv2.CascadeClassifier('../resources/face_models/frontal_face.xml
 
 
 
-def check_face(image, face_detector = FACE_DETECTOR):
+def check_faces(image, face_detector = FACE_DETECTOR):
 
 	""" Checks if an image has a face and cuts it if it does
 
@@ -29,31 +29,27 @@ def check_face(image, face_detector = FACE_DETECTOR):
 			type: CascadeClassifier object
 			info: face detector classifier
 
-	Returns:
+	Yields:
 	----------
 		face:
 			type: numpy array
-			info: cut image in greyscale if there is a face, None otherwise
+			info: cut face image in greyscale
 
 		results:
 			type: dict
 			info: contains the following keys:
-				- Found: boolean
-				- X_coord:  int     (optional)
-				- Y_coord:  int     (optional)
-				- width:    int     (optional)
-				- height:   int     (optional)
+				- X_coord:  int
+				- Y_coord:  int
+				- width:    int
+				- height:   int
 	"""
 
 	image = greyscale_array(image, 'BGR') # TODO: CHECK
 	results = detect_face(image, face_detector, scaleFactor = 1.3, minNeighbors = 4)
 
-	if results['found']:
-		face = cut_face(image, results)
-	else:
-		face = None
-
-	return face, results
+	for coords in results:
+		face = cut_face(image, coords)
+		yield face, coords
 
 
 

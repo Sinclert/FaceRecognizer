@@ -10,7 +10,7 @@ from dataset_miner import get_page
 from dataset_miner import get_next_page
 from dataset_miner import get_images
 
-from image_process import check_face
+from image_process import check_faces
 from image_process import normalize_face
 
 from utils import compute_path
@@ -68,21 +68,19 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 
 		# Each image is saved if a face is detected
 		for image in get_images(page):
-			face, _ = check_face(image)
 
-			# If no face is detected: continue
-			if face is None: continue
+			for face, _ in check_faces(image):
 
-			# Normalizes and stores the image
-			face = Image.fromarray(normalize_face(face))
-			save_image(
-				image = face,
-				output_folder = query.replace(' ', '_'),
-				output_name = str(stored)
-			)
+				# Normalizes and stores the image
+				face = Image.fromarray(normalize_face(face))
+				save_image(
+					image = face,
+					output_folder = query.replace(' ', '_'),
+					output_name = str(stored)
+				)
 
-			stored += 1
-			if stored == pics_num: break
+				stored += 1
+				if stored == pics_num: break
 
 
 

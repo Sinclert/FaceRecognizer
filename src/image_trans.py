@@ -62,35 +62,21 @@ def detect_face(image, classifier, **parameters):
 			type: keyword arguments
 			info: parameters of the face detection
 
-	Returns:
+	Yields:
 	----------
 		results:
 			type: dict
 			info: contains the following keys:
-				- Found: boolean
-				- X_coord:  int     (optional)
-				- Y_coord:  int     (optional)
-				- width:    int     (optional)
-				- height:   int     (optional)
+				- X_coord:  int
+				- Y_coord:  int
+				- width:    int
+				- height:   int
 	"""
 
 	faces = classifier.detectMultiScale(image, **parameters)
 
-	# Only consider the first face (it must be only 1)
-	if len(faces) > 0:
-		(x, y, w, h) = faces[0]
-		results = {
-			'found': True,
-			'X_coord': x,
-			'Y_coord': y,
-			'width': w,
-			'height': h
-		}
-
-	else:
-		results = {'found': False}
-
-	return results
+	for (x, y, w, h) in faces:
+		yield {'X_coord': x, 'Y_coord': y, 'width': w, 'height': h}
 
 
 

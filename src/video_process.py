@@ -3,7 +3,7 @@
 
 import cv2
 
-from image_process import check_face
+from image_process import check_faces
 from image_process import draw_rect
 from image_process import draw_text
 from image_process import normalize_face
@@ -51,7 +51,7 @@ def identify_actors(video_path, clf, clf_th, output_name):
 	notFinished, frame = video.read()
 	while notFinished:
 
-		# Modify the frame if a face is detected
+		# Modify the frame for each detected face
 		frame = modify_frame(frame, clf, clf_th)
 
 		# Write the frame into the new video file
@@ -90,9 +90,7 @@ def modify_frame(frame, clf, clf_th):
 			info: array of frame pixels (may be modified)
 	"""
 
-	face, coords = check_face(frame)
-
-	if face is not None:
+	for face, coords in check_faces(frame):
 		face = normalize_face(face)
 		label = clf.predict(face, clf_th)
 		frame = draw_rect(frame, coords)
