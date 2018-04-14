@@ -7,10 +7,11 @@ import os
 
 project_paths = {
 	'dataset': ['resources', 'datasets'],
+	'face_model': ['resources', 'face_models'],
 	'model': ['models'],
 	'scraping_c': ['configs', 'scraping'],
 	'training_c': ['configs', 'training'],
-	'face_model': ['resources', 'face_models']
+	'video': ['videos']
 }
 
 

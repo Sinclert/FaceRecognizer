@@ -8,10 +8,12 @@ from image_process import draw_rect
 from image_process import draw_text
 from image_process import normalize_face
 
+from utils import compute_path
 
 
 
-def identify_actors(video_path, clf, clf_th, output_name):
+
+def identify_actors(video_path, clf, clf_th, out_name):
 
 	""" Identifies the actors using a classifier and generates an output video
 
@@ -29,7 +31,7 @@ def identify_actors(video_path, clf, clf_th, output_name):
 			type: int / float
 			info: threshold to identify a face as 'Unknown'
 
-		output_name:
+		out_name:
 			type: string
 			info: name of the generated video file
 	"""
@@ -40,8 +42,9 @@ def identify_actors(video_path, clf, clf_th, output_name):
 	frame_w = int(video.get(3))
 	frame_h = int(video.get(4))
 
-	output = cv2.VideoWriter(
-		filename = output_name + '.avi',
+	out_path = compute_path(out_name + '.avi', 'video')
+	out = cv2.VideoWriter(
+		filename = out_path,
 		fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'),
 		fps = 20,
 		frameSize = (frame_w, frame_h)
@@ -55,12 +58,12 @@ def identify_actors(video_path, clf, clf_th, output_name):
 		frame = modify_frame(frame, clf, clf_th)
 
 		# Write the frame into the new video file
-		output.write(frame)
+		out.write(frame)
 		notFinished, frame = video.read()
 
 
 	video.release()
-	output.release()
+	out.release()
 
 
 
