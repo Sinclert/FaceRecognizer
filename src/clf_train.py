@@ -3,6 +3,7 @@
 
 import cv2
 import numpy
+import random
 
 from utils import get_file_paths
 
@@ -59,7 +60,7 @@ class FaceClassifier(object):
 
 
 
-	def __prepare_feats(self, datasets_info):
+	def __prepare_samples(self, datasets_info):
 
 		""" Builds the feature and label vectors from the specified datasets
 
@@ -103,6 +104,62 @@ class FaceClassifier(object):
 
 
 
+	def __validate(self, samples, labels, test_pct = 0.2):
+
+		""" Validates the trained model using a train-test samples separation
+
+		Arguments:
+		----------
+			samples:
+				type: list
+				info: contains all the images
+
+			labels:
+				type: list
+				info: contains all the images labels
+
+			test_pct:
+				type: float (optional)
+				info: percentage of samples used to test
+		"""
+
+		if test_pct < 0 or test_pct > 1:
+			exit('Invalid test percentage to validate')
+
+
+		# Shuffle the samples and the labels
+		comb_list = list(zip(samples, labels))
+		random.shuffle(comb_list)
+		samples, labels = zip(*comb_list)
+
+		# Split by the desired test percentage
+		split = int(len(samples) * test_pct)
+
+		train_samples = samples[split:]
+		train_labels = numpy.array(labels[split:])
+		test_samples = samples[:split]
+		test_labels = numpy.array(labels[:split])
+
+
+		# Training partial model
+		print('Starting validation process')
+		validation_model = ALGORITHMS[self.properties['algorithm']]
+		validation_model.train(train_samples, train_labels)
+
+		total, good = len(test_samples), 0
+
+		# Testing over the test_samples
+		for i, sample in enumerate(test_samples):
+			label, _ = self.model.predict(sample)
+
+			# If the predicted label is the correct one
+			if label == test_labels[i]: good += 1
+
+		print('Accuracy:', round(good/total, 2))
+
+
+
+
 	def predict(self, image, clf_th):
 
 		""" Predicts a label (name) for a given face image
@@ -137,7 +194,7 @@ class FaceClassifier(object):
 
 
 
-	def train(self, datasets_info):
+	def train(self, datasets_info, validate = True):
 
 		""" Trains the specified OpenCV Recognizer algorithm
 
@@ -146,8 +203,17 @@ class FaceClassifier(object):
 			datasets_info:
 				type: list
 				info: dictionaries containing datasets labels and folder
+
+			validate
+				type: bool
+				info: indicates if the model should be validated
 		"""
 
-		feats, labels = self.__prepare_feats(datasets_info)
+		samples, labels = self.__prepare_samples(datasets_info)
+		self.model.train(samples, labels)
 
-		self.model.train(feats, labels)
+		# Validation process
+		if validate: self.__validate(
+			samples = samples,
+			labels = labels,
+		)
