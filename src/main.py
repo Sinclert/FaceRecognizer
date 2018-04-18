@@ -26,7 +26,7 @@ modes = [
 
 
 
-def analyse_video(video_path, model_name, clf_th, frames_th, output):
+def analyse_video(video_path, model_name, clf_th, output):
 
 	""" Identifies actors in a video and generates one with their names
 
@@ -43,10 +43,6 @@ def analyse_video(video_path, model_name, clf_th, frames_th, output):
 		clf_th:
 			type: float
 			info: confidence threshold to identify an actor
-
-		frames_th:
-			type: int
-			info: coherence of frames threshold to identify an actor
 
 		output:
 			type: string
@@ -150,7 +146,7 @@ if __name__ == '__main__':
 			'			-v <video path>\n'
 			'			-m <model name>\n'
 			'			-c <classifier threshold>\n'
-			'			-f <frames threshold>\n'
+			'			-o <output name>\n'
 			'  \n'
 			'  build_datasets: builds several datasets of actors faces\n'
 			'			-d <datasets config file>\n'
@@ -173,11 +169,10 @@ if __name__ == '__main__':
 		parser.add_argument('-v', required = True)
 		parser.add_argument('-m', required = True)
 		parser.add_argument('-c', required = True, type = float)
-		parser.add_argument('-f', required = True, type = int)
 		parser.add_argument('-o', required = True)
 
 		args = parser.parse_args(func_args)
-		analyse_video(args.v, args.m, args.c, args.f, args.o)
+		analyse_video(args.v, args.m, args.c, args.o)
 
 
 	elif arg.mode == 'build_datasets':
