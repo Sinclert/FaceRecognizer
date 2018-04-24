@@ -2,7 +2,10 @@
 
 
 import json
+import math
+import numpy
 import os
+import random
 
 
 project_paths = {
@@ -246,3 +249,120 @@ def write_json(dictionary, file_name, file_type):
 
 	except IOError:
 		exit('The file ' + file_name + ' cannot be opened')
+
+
+
+
+def crossValidation(model, samples, labels, folds = 10):
+
+	""" Tests the specified classifier applying cross validation
+
+	Arguments:
+	----------
+		model:
+			type: OpenCV Recognizer
+			info: object used to train and test
+
+		samples:
+			type: list
+			info: contains all the images
+
+		labels:
+			type: list
+			info: contains all the images labels
+
+		folds:
+			type: int (optional)
+			info: number of train-test iteration
+	"""
+
+	if folds < 2:
+		exit('The number of CV folds must be greater than 1')
+	else:
+		print('Starting validation process')
+
+
+	# Shuffle the samples and the labels
+	comb_list = list(zip(samples, labels))
+	random.shuffle(comb_list)
+	samples, labels = zip(*comb_list)
+
+	# Calculating cut offs in both features lists
+	cutoff = math.floor(len(samples) / folds)
+	results = 0
+
+	for i in range(folds):
+		results += crossValidation_fold(
+			model = model,
+			samples = samples,
+			labels = labels,
+			cutoff = cutoff,
+			folds = folds,
+			i = i
+		)
+
+	print("Accuracy:", round((results/folds), 4))
+
+
+
+
+
+
+def crossValidation_fold(model, samples, labels, cutoff, folds, i):
+
+	""" Performs a single iteration of the Cross Validation algorithm
+
+	Arguments:
+	----------
+		model:
+			type: OpenCV Recognizer
+			info: object used to train and test
+
+		samples:
+			type: list
+			info: contains all the images
+
+		labels:
+			type: list
+			info: contains all the images labels
+
+		cutoff
+			type: int
+			info: number of samples per fold
+
+		folds:
+			type: int
+			info: total number of folds
+
+		i:
+			type: int
+			info: fold iteration number
+	"""
+
+	upper_cut = ((folds-i-1) * cutoff)
+	lower_cut = ((folds-i) * cutoff)
+
+	# Split by the desired test percentage
+	test_samples = samples[upper_cut:lower_cut]
+	test_labels = numpy.array(labels[upper_cut:lower_cut])
+	train_samples = samples[:upper_cut] + samples[lower_cut:]
+	train_labels = numpy.array(labels[:upper_cut] + labels[lower_cut:])
+
+	# Training partial model
+	partial_model = model
+	partial_model.train(train_samples, train_labels)
+	total, good = len(test_samples), 0
+
+
+	# Testing over the test_samples
+	for n, sample in enumerate(test_samples):
+		label, _ = partial_model.predict(sample)
+
+		# If the predicted label is the correct one
+		if label == test_labels[n]: good += 1
+
+
+	score = round(good/total, 4)
+	print('Fold', i, 'completed with score:', score)
+
+	return score
