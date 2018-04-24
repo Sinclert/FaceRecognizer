@@ -43,10 +43,10 @@ def identify_actors(video_path, clf, clf_th, out_name):
 	video_h = int(video.get(4))
 	video_fps = int(video.get(5))
 
-	out_path = compute_path(out_name + '.avi', 'video')
+	out_path = compute_path(out_name + '.mp4', 'video')
 	out = cv2.VideoWriter(
 		filename = out_path,
-		fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'),
+		fourcc = cv2.VideoWriter_fourcc('X', '2', '6', '4'),
 		fps = video_fps,
 		frameSize = (video_w, video_h)
 	)
