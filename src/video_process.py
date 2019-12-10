@@ -45,23 +45,21 @@ def identify_actors(video_path, clf, clf_th, out_name):
 
 	out_path = compute_path(out_name + '.mp4', 'video')
 	out = cv2.VideoWriter(
-		filename = out_path,
-		fourcc = cv2.VideoWriter_fourcc('X', '2', '6', '4'),
-		fps = video_fps,
-		frameSize = (video_w, video_h)
+		filename=out_path,
+		fourcc=cv2.VideoWriter_fourcc('X', '2', '6', '4'),
+		fps=video_fps,
+		frameSize=(video_w, video_h)
 	)
 
-
-	notFinished, frame = video.read()
-	while notFinished:
+	not_finished, frame = video.read()
+	while not_finished:
 
 		# Modify the frame for each detected face
 		frame = modify_frame(frame, clf, clf_th)
 
 		# Write the frame into the new video file
 		out.write(frame)
-		notFinished, frame = video.read()
-
+		not_finished, frame = video.read()
 
 	video.release()
 	out.release()

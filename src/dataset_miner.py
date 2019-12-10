@@ -11,7 +11,7 @@ from PIL import Image
 
 
 
-def build_url(domain, path, parameters = None):
+def build_url(domain, path, parameters=None):
 
 	""" Search for the query in a given domain and returns the html object
 

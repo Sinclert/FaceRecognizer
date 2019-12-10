@@ -17,11 +17,11 @@ from video_process import identify_actors
 
 
 # Default CLI modes
-modes = [
+modes = (
 	'analyse_video',
 	'build_datasets',
 	'train_model'
-]
+)
 
 
 
@@ -50,17 +50,17 @@ def analyse_video(video_path, model_name, clf_th, output):
 	"""
 
 	clf_props = read_json(
-		file_name = model_name + '.json',
-		file_type = 'model'
+		file_name=model_name + '.json',
+		file_type='model'
 	)
 
 	# Creating and loading the trained classifier
 	clf = FaceClassifier(clf_props['algorithm'])
 	clf.properties = clf_props
 	clf.model = read_clf(
-		clf = clf,
-		file_name = model_name + '.xml',
-		file_type = 'model'
+		clf=clf,
+		file_name=model_name + '.xml',
+		file_type='model'
 	)
 
 	# Generating a similar video with the names on it
@@ -81,8 +81,8 @@ def build_datasets(dataset_config):
 	"""
 
 	datasets = read_json(
-		file_name = dataset_config,
-		file_type = 'scraping_c'
+		file_name=dataset_config,
+		file_type='scraping_c'
 	)
 
 	for data in datasets:
@@ -111,8 +111,8 @@ def train_model(algorithm, training_config, output):
 	"""
 
 	datasets = read_json(
-		file_name = training_config,
-		file_type = 'training_c'
+		file_name=training_config,
+		file_type='training_c'
 	)
 
 	classifier = FaceClassifier(algorithm)
@@ -120,16 +120,16 @@ def train_model(algorithm, training_config, output):
 
 	# Saving FaceClassifier int <-> label dict as JSON
 	write_json(
-		dictionary = classifier.properties,
-		file_name = output + '.json',
-		file_type = 'model'
+		dictionary=classifier.properties,
+		file_name=output + '.json',
+		file_type='model'
 	)
 
 	# Saving FaceClassifier trained model as XML (pickle not working)
 	write_clf(
-		clf = classifier.model,
-		file_name = output + '.xml',
-		file_type = 'model'
+		clf=classifier.model,
+		file_name=output + '.xml',
+		file_type='model'
 	)
 
 
@@ -138,8 +138,8 @@ def train_model(algorithm, training_config, output):
 if __name__ == '__main__':
 
 	global_parser = Parser(
-		usage = 'main.py [mode] [arguments]',
-		description =
+		usage='main.py [mode] [arguments]',
+		description=
 			'modes and arguments:\n'
 			'  \n'
 			'  analyse_video: generates a copy of a video with the actors faces\n'
@@ -155,21 +155,21 @@ if __name__ == '__main__':
 			'			-a <algorithm name>\n'
 			'			-d <training config file>\n'
 			'			-o <output name>\n',
-		formatter_class = RawDescriptionHelpFormatter
+		formatter_class=RawDescriptionHelpFormatter
 	)
 
 	# Parsing the arguments in order to check the mode
-	global_parser.add_argument('mode', choices = modes)
+	global_parser.add_argument('mode', choices=modes)
 	arg, func_args = global_parser.parse_known_args()
 
 
 	if arg.mode == 'analyse_video':
 
-		parser = Parser(usage = "Use 'main.py -h' for help")
-		parser.add_argument('-v', required = True)
-		parser.add_argument('-m', required = True)
-		parser.add_argument('-c', required = True, type = float)
-		parser.add_argument('-o', required = True)
+		parser = Parser(usage="Use 'main.py -h' for help")
+		parser.add_argument('-v', required=True)
+		parser.add_argument('-m', required=True)
+		parser.add_argument('-c', required=True, type=float)
+		parser.add_argument('-o', required=True)
 
 		args = parser.parse_args(func_args)
 		analyse_video(args.v, args.m, args.c, args.o)
@@ -177,8 +177,8 @@ if __name__ == '__main__':
 
 	elif arg.mode == 'build_datasets':
 
-		parser = Parser(usage = "Use 'main.py -h' for help")
-		parser.add_argument('-d', required = True)
+		parser = Parser(usage="Use 'main.py -h' for help")
+		parser.add_argument('-d', required=True)
 
 		args = parser.parse_args(func_args)
 		build_datasets(args.d)
@@ -186,10 +186,10 @@ if __name__ == '__main__':
 
 	elif arg.mode == 'train_model':
 
-		parser = Parser(usage = "Use 'main.py -h' for help")
-		parser.add_argument('-a', required = True)
-		parser.add_argument('-d', required = True)
-		parser.add_argument('-o', required = True)
+		parser = Parser(usage="Use 'main.py -h' for help")
+		parser.add_argument('-a', required=True)
+		parser.add_argument('-d', required=True)
+		parser.add_argument('-o', required=True)
 
 		args = parser.parse_args(func_args)
 		train_model(args.a, args.d, args.o)

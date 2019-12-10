@@ -15,7 +15,7 @@ FACE_DETECTOR = cv2.CascadeClassifier('../resources/face_models/frontal_face.xml
 
 
 
-def check_faces(image, face_detector = FACE_DETECTOR):
+def check_faces(image, face_detector=FACE_DETECTOR):
 
 	""" Checks if an image has a face and cuts it if it does
 
@@ -45,7 +45,7 @@ def check_faces(image, face_detector = FACE_DETECTOR):
 	"""
 
 	image = greyscale_array(image, 'BGR') # TODO: CHECK
-	results = detect_face(image, face_detector, scaleFactor = 1.3, minNeighbors = 4)
+	results = detect_face(image, face_detector, scaleFactor=1.3, minNeighbors=4)
 
 	for coords in results:
 		face = cut_face(image, coords)
@@ -85,11 +85,11 @@ def draw_rect(image, coordinates):
 	h = coordinates['height']
 
 	cv2.rectangle(
-		img = image,
-		pt1 = (x, y),
-		pt2 = (x+w, y+h),
-		color = (255, 0, 0),
-		thickness = 2
+		img=image,
+		pt1=(x, y),
+		pt2=(x+w, y+h),
+		color=(255, 0, 0),
+		thickness=2
 	)
 
 	return image
@@ -127,13 +127,13 @@ def draw_text(image, text, coordinates):
 	"""
 
 	cv2.putText(
-		img = image,
-		text = text,
-		org = (coordinates['X_coord'], coordinates['Y_coord']),
-		fontFace = cv2.FONT_HERSHEY_PLAIN,
-		fontScale = 3,
-		color = (255, 0, 0),
-		thickness = 2
+		img=image,
+		text=text,
+		org=(coordinates['X_coord'], coordinates['Y_coord']),
+		fontFace=cv2.FONT_HERSHEY_PLAIN,
+		fontScale=3,
+		color=(255, 0, 0),
+		thickness=2
 	)
 
 	return image

@@ -104,7 +104,7 @@ def get_file_paths(folder_name, file_type):
 
 	folder_path = compute_path(folder_name, file_type)
 
-	file_names = os.listdir(path = folder_path)
+	file_names = os.listdir(path=folder_path)
 	file_paths = [os.path.join(folder_path, file) for file in file_names]
 
 	return file_paths
@@ -171,7 +171,7 @@ def write_clf(clf, file_name, file_type):
 	file_path = compute_path(file_name, file_type)
 
 	file_dir = file_path.replace(file_name, '')
-	os.makedirs(file_dir, exist_ok = True)
+	os.makedirs(file_dir, exist_ok=True)
 
 	try:
 		clf.write(file_path)
@@ -206,7 +206,7 @@ def read_json(file_name, file_type):
 	file_path = compute_path(file_name, file_type)
 
 	try:
-		file = open(file_path, 'r', encoding = 'utf-8')
+		file = open(file_path, 'r', encoding='utf-8')
 		json_dict = json.load(file)
 		file.close()
 
@@ -240,11 +240,11 @@ def write_json(dictionary, file_name, file_type):
 	file_path = compute_path(file_name, file_type)
 
 	file_dir = file_path.replace(file_name, '')
-	os.makedirs(file_dir, exist_ok = True)
+	os.makedirs(file_dir, exist_ok=True)
 
 	try:
-		file = open(file_path, 'w', encoding = 'utf-8')
-		json.dump(dictionary, file, sort_keys = True, indent = 4)
+		file = open(file_path, 'w', encoding='utf-8')
+		json.dump(dictionary, file, sort_keys=True, indent=4)
 		file.close()
 
 	except IOError:
@@ -253,7 +253,7 @@ def write_json(dictionary, file_name, file_type):
 
 
 
-def crossValidation(model, samples, labels, folds = 10):
+def crossValidation(model, samples, labels, folds=10):
 
 	""" Tests the specified classifier applying cross validation
 
@@ -281,7 +281,6 @@ def crossValidation(model, samples, labels, folds = 10):
 	else:
 		print('Starting validation process')
 
-
 	# Shuffle the samples and the labels
 	comb_list = list(zip(samples, labels))
 	random.shuffle(comb_list)
@@ -293,17 +292,15 @@ def crossValidation(model, samples, labels, folds = 10):
 
 	for i in range(folds):
 		results += crossValidation_fold(
-			model = model,
-			samples = samples,
-			labels = labels,
-			cutoff = cutoff,
-			folds = folds,
-			i = i
+			model=model,
+			samples=samples,
+			labels=labels,
+			cutoff=cutoff,
+			folds=folds,
+			i=i
 		)
 
 	print("Accuracy:", round((results/folds), 4))
-
-
 
 
 
@@ -353,14 +350,13 @@ def crossValidation_fold(model, samples, labels, cutoff, folds, i):
 	partial_model.train(train_samples, train_labels)
 	total, good = len(test_samples), 0
 
-
 	# Testing over the test_samples
 	for n, sample in enumerate(test_samples):
 		label, _ = partial_model.predict(sample)
 
 		# If the predicted label is the correct one
-		if label == test_labels[n]: good += 1
-
+		if label == test_labels[n]:
+			good += 1
 
 	score = round(good/total, 4)
 	print('Fold', i, 'completed with score:', score)

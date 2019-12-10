@@ -110,7 +110,7 @@ def cut_face(image, face_properties):
 	# TODO: What is this?
 	w_rm = int(0.2 * w / 2)
 
-	return image[y : (y+h) , (x+w_rm) : (x+w-w_rm)]
+	return image[y: (y+h), (x+w_rm): (x+w-w_rm)]
 
 
 

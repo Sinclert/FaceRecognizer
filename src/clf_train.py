@@ -88,8 +88,8 @@ class FaceClassifier(object):
 		for i, dataset in enumerate(datasets_info):
 
 			images_paths = get_file_paths(
-				folder_name = dataset['folder'],
-				file_type = 'dataset'
+				folder_name=dataset['folder'],
+				file_type='dataset'
 			)
 
 			feats += [cv2.imread(path, 0) for path in images_paths]
@@ -157,8 +157,9 @@ class FaceClassifier(object):
 		self.model.train(samples, labels)
 
 		# Validation process
-		if validate: crossValidation(
-			model = ALGORITHMS[self.properties['algorithm']],
-			samples = samples,
-			labels = labels
-		)
+		if validate:
+			crossValidation(
+				model=ALGORITHMS[self.properties['algorithm']],
+				samples=samples,
+				labels=labels
+			)

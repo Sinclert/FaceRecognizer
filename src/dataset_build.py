@@ -16,18 +16,18 @@ from image_process import normalize_face
 from utils import compute_path
 
 
-SEARCH_ENGINE = {
+SEARCH_ENGINE = frozenset({
 	'domain': 'www.google.com',
-    'path': '/search',
-    'params': {
+	'path': '/search',
+	'params': {
 		'tbm': 'isch'
 	}
-}
+})
 
 
 
 
-def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
+def create_dataset(query, pics_num, search_engine=SEARCH_ENGINE):
 
 	""" Downloads, transforms and stores pictures given a query and an engine
 
@@ -74,13 +74,14 @@ def create_dataset(query, pics_num, search_engine = SEARCH_ENGINE):
 				# Normalizes and stores the image
 				face = Image.fromarray(normalize_face(face))
 				save_image(
-					image = face,
-					output_folder = query.replace(' ', '_'),
-					output_name = str(stored)
+					image=face,
+					output_folder=query.replace(' ', '_'),
+					output_name=str(stored)
 				)
 
 				stored += 1
-				if stored == pics_num: break
+				if stored == pics_num:
+					break
 
 
 
@@ -105,7 +106,7 @@ def save_image(image, output_folder, output_name):
 	"""
 
 	folder_path = compute_path(output_folder, 'dataset')
-	os.makedirs(folder_path, exist_ok = True)
+	os.makedirs(folder_path, exist_ok=True)
 
 	file_path = os.path.join(folder_path, output_name + '.png')
 	image.save(file_path)
