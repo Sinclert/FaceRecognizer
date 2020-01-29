@@ -44,7 +44,6 @@ def identify_actors(video_path, clf, clf_th, out_name):
 	video_fps = int(video.get(5))
 
 	out_path = compute_path(out_name + '.mp4', 'video')
-	import ipdb; ipdb.set_trace()
 	out = cv2.VideoWriter(
 		filename=out_path,
 		fourcc= cv2.VideoWriter_fourcc(*"mp4v"),#cv2.VideoWriter_fourcc('X', '2', '6', '4'),
