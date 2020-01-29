@@ -4,3 +4,6 @@
 models
 resources/datasets
 videos
+venv
+videos/*.mp4
+.vscode

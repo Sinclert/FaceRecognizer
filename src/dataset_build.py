@@ -16,13 +16,13 @@ from image_process import normalize_face
 from utils import compute_path
 
 
-SEARCH_ENGINE = frozenset({
+SEARCH_ENGINE = {
 	'domain': 'www.google.com',
 	'path': '/search',
 	'params': {
 		'tbm': 'isch'
 	}
-})
+}
 
 
 
@@ -59,15 +59,15 @@ def create_dataset(query, pics_num, search_engine=SEARCH_ENGINE):
 
 	# Until the number of pictures is not reached
 	while stored < pics_num:
-
-		url = build_url(domain, path, params)
+		if(path):
+			url = build_url(domain, path, params)
 		page = get_page(url)
 
 		path = get_next_page(page, 'fl')
 		params = None
 
 		# Each image is saved if a face is detected
-		for image in get_images(page):
+		for image in get_images(page, url):
 
 			for face, _ in check_faces(image):
 

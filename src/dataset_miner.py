@@ -96,13 +96,15 @@ def get_next_page(page, class_name):
 	"""
 
 	urls = page.findAll('a', {'class': class_name})
+	if(len(urls) == 0):
+		return None
+	else:
+		return urls[-1]['href']
 
-	return urls[-1]['href']
 
 
 
-
-def get_images(page):
+def get_images(page, url):
 
 	""" Yields each page image bytes as a PIL Image (Generator)
 
@@ -120,13 +122,20 @@ def get_images(page):
 	"""
 
 	images = page.findAll('img')
-
 	for img in images:
 
-		image_bytes = requests.get(img['src']).content
+		try:
+			if(img.get('src')):
+				image_bytes = requests.get(img['src']).content
+			else:
+				continue
+		except Exception:
+			image_bytes = requests.get(url + img['src']).content
 
 		image = base64.b64encode(image_bytes)
 		image = base64.b64decode(image)
-		image = Image.open(io.BytesIO(image))
-
-		yield image
+		try:
+			image = Image.open(io.BytesIO(image))
+			yield image
+		except Exception:
+			pass
