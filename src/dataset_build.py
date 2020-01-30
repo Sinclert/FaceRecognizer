@@ -59,7 +59,7 @@ def create_dataset(query, pics_num, search_engine=SEARCH_ENGINE):
 
 	# Until the number of pictures is not reached
 	while stored < pics_num:
-		if(path):
+		if path:
 			url = build_url(domain, path, params)
 		page = get_page(url)
 
