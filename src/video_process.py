@@ -46,7 +46,7 @@ def identify_actors(video_path, clf, clf_th, out_name):
 	out_path = compute_path(out_name + '.mp4', 'video')
 	out = cv2.VideoWriter(
 		filename=out_path,
-		fourcc=cv2.VideoWriter_fourcc('X', '2', '6', '4'),
+		fourcc=cv2.VideoWriter_fourcc(*"mp4v"), # Before: cv2.VideoWriter_fourcc('X', '2', '6', '4'),
 		fps=video_fps,
 		frameSize=(video_w, video_h)
 	)
